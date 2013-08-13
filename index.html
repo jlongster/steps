@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>debugger</title>
+
+    <style type="text/css">
+      span {
+          color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="run">Run <code>foo(3)</code></button>
+    <button id="step">Step</button>
+
+    <div id="src"></div>
+
+    <h2>Stack</h2>
+    <div id="stack"></div>
+
+    <h2>Result</h2>
+    <div id="res"></div>
+
+    <script type="application/javascript;version=1.7" src="vm.js"></script>
+    <script type="application/javascript;version=1.7" src="test_.js"></script>
+    <script type="application/javascript;version=1.7" src="debugger.js"></script>
+  </body>
+</html>
