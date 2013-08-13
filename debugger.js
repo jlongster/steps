@@ -19,6 +19,12 @@ function setStack(stack) {
     document.getElementById('stack').innerHTML = stack.replace(/\n/g, '<br />');
 }
 
+function finish(res) {
+    setSource(_src);
+    document.getElementById('res').innerHTML = res;
+    setStack(s.getStack());
+}
+
 _src = TEST._src;
 setSource(TEST._src);
 s = VM.stepper(TEST.foo(3), TEST._src);
@@ -28,9 +34,7 @@ document.getElementById('run').addEventListener('click', function() {
     var r = s.run();
 
     if(r !== undefined) {
-        setSource(_src);
-        document.getElementById('res').innerHTML = r;
-        setStack(s.getStack());    
+        finish(r);
     }
     else {
         setPosition(s.currentPos);
@@ -41,5 +45,9 @@ document.getElementById('run').addEventListener('click', function() {
 document.getElementById('step').addEventListener('click', function() {
     s.step();
     setPosition(s.currentPos);
-    setStack(s.getStack());    
+    setStack(s.getStack());
+
+    if(s.finished) {
+        finish(s.currentValue);
+    }
 });
