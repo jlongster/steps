@@ -7,31 +7,66 @@ function bar(x) {
     yield [
         VM.return,
         (yield [
-            (yield [
-                (yield [
-                    foo,
-                    44,
-                    47
-                ])((yield [
+            function () {
+                yield [
+                    VM.giveback,
                     (yield [
-                        x,
-                        48,
-                        49
-                    ]) - (yield [
-                        1,
-                        52,
-                        53
-                    ]),
-                    48,
-                    53
-                ])),
-                44,
-                54
-            ]) + (yield [
-                1,
-                57,
-                58
-            ]),
+                        function () {
+                            yield [
+                                VM.giveback,
+                                (yield [
+                                    function () {
+                                        yield [
+                                            VM.giveback,
+                                            foo
+                                        ];
+                                    },
+                                    44,
+                                    47
+                                ])((yield [
+                                    function () {
+                                        yield [
+                                            VM.giveback,
+                                            (yield [
+                                                function () {
+                                                    yield [
+                                                        VM.giveback,
+                                                        x
+                                                    ];
+                                                },
+                                                48,
+                                                49
+                                            ]) - (yield [
+                                                function () {
+                                                    yield [
+                                                        VM.giveback,
+                                                        1
+                                                    ];
+                                                },
+                                                52,
+                                                53
+                                            ])
+                                        ];
+                                    },
+                                    48,
+                                    53
+                                ]))
+                            ];
+                        },
+                        44,
+                        54
+                    ]) + (yield [
+                        function () {
+                            yield [
+                                VM.giveback,
+                                1
+                            ];
+                        },
+                        57,
+                        58
+                    ])
+                ];
+            },
             44,
             58
         ]),
@@ -41,38 +76,78 @@ function bar(x) {
 }
 function foo(x) {
     if (yield [
-            (yield [
-                x,
-                88,
-                89
-            ]) > (yield [
-                0,
-                92,
-                93
-            ]),
+            function () {
+                yield [
+                    VM.giveback,
+                    (yield [
+                        function () {
+                            yield [
+                                VM.giveback,
+                                x
+                            ];
+                        },
+                        88,
+                        89
+                    ]) > (yield [
+                        function () {
+                            yield [
+                                VM.giveback,
+                                0
+                            ];
+                        },
+                        92,
+                        93
+                    ])
+                ];
+            },
             88,
             93
         ]) {
         yield [
             VM.return,
             (yield [
-                (yield [
-                    3,
-                    112,
-                    113
-                ]) + (yield [
-                    (yield [
-                        bar,
-                        116,
-                        119
-                    ])((yield [
-                        x,
-                        120,
-                        121
-                    ])),
-                    116,
-                    122
-                ]),
+                function () {
+                    yield [
+                        VM.giveback,
+                        (yield [
+                            function () {
+                                yield [
+                                    VM.giveback,
+                                    3
+                                ];
+                            },
+                            112,
+                            113
+                        ]) + (yield [
+                            function () {
+                                yield [
+                                    VM.giveback,
+                                    (yield [
+                                        function () {
+                                            yield [
+                                                VM.giveback,
+                                                bar
+                                            ];
+                                        },
+                                        116,
+                                        119
+                                    ])((yield [
+                                        function () {
+                                            yield [
+                                                VM.giveback,
+                                                x
+                                            ];
+                                        },
+                                        120,
+                                        121
+                                    ]))
+                                ];
+                            },
+                            116,
+                            122
+                        ])
+                    ];
+                },
                 112,
                 122
             ]),
@@ -83,7 +158,12 @@ function foo(x) {
     yield [
         VM.return,
         (yield [
-            0,
+            function () {
+                yield [
+                    VM.giveback,
+                    0
+                ];
+            },
             141,
             142
         ]),

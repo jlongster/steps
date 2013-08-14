@@ -49,13 +49,6 @@ Program.prototype.scanNode = function(o) {
 // instrument
 
 Program.prototype.instrumentNode = function(o) {
-    // this.body.unshift(new VariableDeclaration('var', [
-    //     new VariableDeclarator(new Identifier('_VM'), new CallExpression(
-    //         new Identifier('require'),
-    //         [new Literal('./vm')]
-    //     ))
-    // ]));
-
     this.body.push(new ExpressionStatement(
         new AssignmentExpression(
             new Identifier('TEST'),
@@ -94,7 +87,20 @@ ReturnStatement.prototype.instrumentNode = function() {
 Expression.prototype.instrumentNode = function(o) {
     return new SequenceExpression([new YieldExpression(
         new ArrayExpression([
-            this,
+            new FunctionExpression(
+                false,
+                [],
+                new BlockStatement([
+                    new ExpressionStatement(
+                        new YieldExpression(
+                            new ArrayExpression([
+                                new Identifier('VM.giveback'),
+                                this
+                            ])
+                        )
+                    )
+                ])
+            ),
             new Literal(this.range[0]),
             new Literal(this.range[1])
         ])

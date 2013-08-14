@@ -25,12 +25,20 @@ function finish(res) {
     setStack(s.getStack());
 }
 
+function updateUI() {
+    setPosition(s.currentPos);
+    setStack(s.getStack());
+
+    if(s.finished) {
+        finish(s.currentValue);
+    }
+}
+
 _src = TEST._src;
 setSource(TEST._src);
 s = VM.stepper(TEST.foo(3), TEST._src);
 
 document.getElementById('run').addEventListener('click', function() {
-    s.stepping = false;
     var r = s.run();
 
     if(r !== undefined) {
@@ -42,12 +50,12 @@ document.getElementById('run').addEventListener('click', function() {
     }
 });
 
-document.getElementById('step').addEventListener('click', function() {
-    s.step();
-    setPosition(s.currentPos);
-    setStack(s.getStack());
+document.getElementById('step-over').addEventListener('click', function() {
+    s.stepOver();
+    updateUI();
+});
 
-    if(s.finished) {
-        finish(s.currentValue);
-    }
+document.getElementById('step-into').addEventListener('click', function() {
+    s.step();
+    updateUI();
 });

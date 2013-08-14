@@ -5,22 +5,25 @@
 
     var BREAK = new Object();
     var RETURN = new Object();
+    var GIVEBACK = new Object();
 
     // stepper
 
     function Stepper(gen, src) {
         this.stack = new Array(100000);
         this.stackIdx = -1;
+        this.exprStatus = [];
         this.src = src;
         this.currentValue = undefined;
         this.currentExpr = null;
         this.stepping = false;
         this.finished = false;
+        this.depth = 0;
 
         this.pushStack(gen, '<global>');
     }
 
-    Stepper.prototype.step = function() {
+    Stepper.prototype._step = function() {
         if(this.finished) return;
 
         var res = undefined;
@@ -46,26 +49,40 @@
             this.stepping = true;
             this.currentPos = res.slice(1);
         }
-        else if(isGeneratorInstance(res[0])) {
-            this.pushStack(res[0],
-                           this.src.slice(res[1], res[2]));
+        else if(res[0] === GIVEBACK) {
+            var r = res[1];
+            this.currentValue = r;
+            this.popStack();
+            this.exprIdx--;
 
-            //if(this.stepping) {
-                this.currentPos = res.slice(1);
-            //}
-
-            res = undefined;
+            if(isGeneratorInstance(r)) {
+                this.pushStack(r, '&lt;calling&gt;', [0, 0], true);
+                this._step();
+            }
         }
         else {
-            this.currentValue = res[0];
+            var pos = res.slice(1);
+            this.pushStack(res[0](),
+                           pos,
+                           this.src.slice(pos[0], pos[1]));
+        }
+    };
 
-            //if(this.stepping) {
-                this.currentPos = res.slice(1);
-            //}
+    Stepper.prototype.step = function() {
+        this._step();
+    };
+
+    Stepper.prototype.stepOver = function() {
+        this._step();
+
+        while(!this.finished && !this.stack[this.stackIdx - 1].topLevel) {
+            this._step();
         }
     };
 
     Stepper.prototype.run = function() {
+        this.stepping = false;
+
         while(!this.stepping && !this.finished) {
             this.step();
         }
@@ -78,21 +95,26 @@
         }
     };
 
-    Stepper.prototype.pushStack = function(gen, expr) {
+    Stepper.prototype.pushStack = function(gen, pos, expr, topLevel) {
         this.currentValue = undefined;
         this.stackIdx++;
-        this.stack[this.stackIdx] = { gen: gen, expr: expr };
+        this.stack[this.stackIdx] = { gen: gen, 
+                                      expr: expr,
+                                      pos: pos,
+                                      topLevel: topLevel };
+        this.currentPos = pos;
     };
 
     Stepper.prototype.popStack = function() {
         this.stack[this.stackIdx] = null;
         this.stackIdx--;
+        this.currentPos = this.stack[this.stackIdx].pos;
     };
 
     Stepper.prototype.getStack = function() {
         var exprs = [];
         for(var i=0; i<=this.stackIdx; i++) {
-            exprs.push(this.stack[i].expr);
+            exprs.push(this.stack[i].expr + ' (' + this.stack[i].topLevel + ')');
         }
         return exprs.join('\n');
     };
@@ -103,6 +125,7 @@
         },
 
         break: BREAK,
-        return: RETURN
+        return: RETURN,
+        giveback: GIVEBACK
     };
 })();
