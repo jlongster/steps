@@ -59,3 +59,7 @@ document.getElementById('step-into').addEventListener('click', function() {
     s.step();
     updateUI();
 });
+
+document.getElementById('eval').addEventListener('click', function() {
+    alert(s.eval(document.getElementById('eval-txt').value));
+});

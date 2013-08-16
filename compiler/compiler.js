@@ -5,6 +5,7 @@ var Node = T.Node;
 var Literal = T.Literal;
 var Identifier = T.Identifier;
 var Expression = T.Expression;
+var IfStatement = T.IfStatement;
 var ArrayExpression = T.ArrayExpression;
 var VariableDeclaration = T.VariableDeclaration;
 var VariableDeclarator = T.VariableDeclarator;
@@ -89,8 +90,23 @@ Expression.prototype.instrumentNode = function(o) {
         new ArrayExpression([
             new FunctionExpression(
                 false,
-                [],
+                [new Identifier("arg1")],
                 new BlockStatement([
+                    new IfStatement(
+                        new Identifier("arg1"),
+
+                        new ExpressionStatement(
+                            new YieldExpression(
+                                new ArrayExpression([
+                                    new Identifier('VM.giveback'),
+                                    new CallExpression(
+                                        new Identifier('eval'),
+                                        [new Identifier('arg1')]
+                                    )
+                                ])
+                            )
+                        )
+                    ),
                     new ExpressionStatement(
                         new YieldExpression(
                             new ArrayExpression([

@@ -23,11 +23,24 @@
         this.pushStack(gen, '<global>');
     }
 
-    Stepper.prototype._step = function() {
+    Stepper.prototype._step = function(arg1) {
         if(this.finished) return;
 
         var res = undefined;
-        var gen = this.stack[this.stackIdx].gen;
+        var frame = this.stack[this.stackIdx];
+        var gen = frame.gen;
+
+        if(arg1) {
+            var r = gen(arg1).next();
+            if(r[0] !== GIVEBACK) {
+                throw new Error("invalid eval'ed object");
+            }
+            return r[1];
+        }
+        else if(frame.unborn) {
+            gen = frame.gen = gen();
+            frame.unborn = false;
+        }
 
         try {
             res = gen.send(this.currentValue);
@@ -56,15 +69,18 @@
             this.exprIdx--;
 
             if(isGeneratorInstance(r)) {
-                this.pushStack(r, '&lt;calling&gt;', [0, 0], true);
-                this._step();
+                this.pushStack(r, [0, 0], null, true);
             }
+
+            this._step();
         }
         else {
             var pos = res.slice(1);
-            this.pushStack(res[0](),
+            this.pushStack(res[0],
                            pos,
-                           this.src.slice(pos[0], pos[1]));
+                           this.src.slice(pos[0], pos[1]),
+                           false,
+                           true);
         }
     };
 
@@ -78,6 +94,13 @@
         while(!this.finished && !this.stack[this.stackIdx - 1].topLevel) {
             this._step();
         }
+    };
+
+    Stepper.prototype.eval = function(str) {
+        if(this.stack[this.stackIdx].unborn) {
+            return this._step(str);
+        }
+        return 'unable to eval';
     };
 
     Stepper.prototype.run = function() {
@@ -95,26 +118,32 @@
         }
     };
 
-    Stepper.prototype.pushStack = function(gen, pos, expr, topLevel) {
+    Stepper.prototype.pushStack = function(gen, pos, expr, topLevel, unborn) {
         this.currentValue = undefined;
         this.stackIdx++;
         this.stack[this.stackIdx] = { gen: gen, 
                                       expr: expr,
                                       pos: pos,
-                                      topLevel: topLevel };
+                                      topLevel: topLevel,
+                                      unborn: unborn };
         this.currentPos = pos;
     };
 
     Stepper.prototype.popStack = function() {
         this.stack[this.stackIdx] = null;
         this.stackIdx--;
-        this.currentPos = this.stack[this.stackIdx].pos;
+
+        if(this.stackIdx > 0) {
+            this.currentPos = this.stack[this.stackIdx].pos;
+        }
     };
 
     Stepper.prototype.getStack = function() {
         var exprs = [];
         for(var i=0; i<=this.stackIdx; i++) {
-            exprs.push(this.stack[i].expr + ' (' + this.stack[i].topLevel + ')');
+            if(this.stack[i].expr) {
+                exprs.push(this.stack[i].expr);
+            }
         }
         return exprs.join('\n');
     };

@@ -7,15 +7,30 @@ function bar(x) {
     yield [
         VM.return,
         (yield [
-            function () {
+            function (arg1) {
+                if (arg1)
+                    yield [
+                        VM.giveback,
+                        eval(arg1)
+                    ];
                 yield [
                     VM.giveback,
                     (yield [
-                        function () {
+                        function (arg1) {
+                            if (arg1)
+                                yield [
+                                    VM.giveback,
+                                    eval(arg1)
+                                ];
                             yield [
                                 VM.giveback,
                                 (yield [
-                                    function () {
+                                    function (arg1) {
+                                        if (arg1)
+                                            yield [
+                                                VM.giveback,
+                                                eval(arg1)
+                                            ];
                                         yield [
                                             VM.giveback,
                                             foo
@@ -24,11 +39,21 @@ function bar(x) {
                                     44,
                                     47
                                 ])((yield [
-                                    function () {
+                                    function (arg1) {
+                                        if (arg1)
+                                            yield [
+                                                VM.giveback,
+                                                eval(arg1)
+                                            ];
                                         yield [
                                             VM.giveback,
                                             (yield [
-                                                function () {
+                                                function (arg1) {
+                                                    if (arg1)
+                                                        yield [
+                                                            VM.giveback,
+                                                            eval(arg1)
+                                                        ];
                                                     yield [
                                                         VM.giveback,
                                                         x
@@ -37,7 +62,12 @@ function bar(x) {
                                                 48,
                                                 49
                                             ]) - (yield [
-                                                function () {
+                                                function (arg1) {
+                                                    if (arg1)
+                                                        yield [
+                                                            VM.giveback,
+                                                            eval(arg1)
+                                                        ];
                                                     yield [
                                                         VM.giveback,
                                                         1
@@ -56,7 +86,12 @@ function bar(x) {
                         44,
                         54
                     ]) + (yield [
-                        function () {
+                        function (arg1) {
+                            if (arg1)
+                                yield [
+                                    VM.giveback,
+                                    eval(arg1)
+                                ];
                             yield [
                                 VM.giveback,
                                 1
@@ -76,11 +111,21 @@ function bar(x) {
 }
 function foo(x) {
     if (yield [
-            function () {
+            function (arg1) {
+                if (arg1)
+                    yield [
+                        VM.giveback,
+                        eval(arg1)
+                    ];
                 yield [
                     VM.giveback,
                     (yield [
-                        function () {
+                        function (arg1) {
+                            if (arg1)
+                                yield [
+                                    VM.giveback,
+                                    eval(arg1)
+                                ];
                             yield [
                                 VM.giveback,
                                 x
@@ -89,7 +134,12 @@ function foo(x) {
                         88,
                         89
                     ]) > (yield [
-                        function () {
+                        function (arg1) {
+                            if (arg1)
+                                yield [
+                                    VM.giveback,
+                                    eval(arg1)
+                                ];
                             yield [
                                 VM.giveback,
                                 0
@@ -106,11 +156,21 @@ function foo(x) {
         yield [
             VM.return,
             (yield [
-                function () {
+                function (arg1) {
+                    if (arg1)
+                        yield [
+                            VM.giveback,
+                            eval(arg1)
+                        ];
                     yield [
                         VM.giveback,
                         (yield [
-                            function () {
+                            function (arg1) {
+                                if (arg1)
+                                    yield [
+                                        VM.giveback,
+                                        eval(arg1)
+                                    ];
                                 yield [
                                     VM.giveback,
                                     3
@@ -119,11 +179,21 @@ function foo(x) {
                             112,
                             113
                         ]) + (yield [
-                            function () {
+                            function (arg1) {
+                                if (arg1)
+                                    yield [
+                                        VM.giveback,
+                                        eval(arg1)
+                                    ];
                                 yield [
                                     VM.giveback,
                                     (yield [
-                                        function () {
+                                        function (arg1) {
+                                            if (arg1)
+                                                yield [
+                                                    VM.giveback,
+                                                    eval(arg1)
+                                                ];
                                             yield [
                                                 VM.giveback,
                                                 bar
@@ -132,7 +202,12 @@ function foo(x) {
                                         116,
                                         119
                                     ])((yield [
-                                        function () {
+                                        function (arg1) {
+                                            if (arg1)
+                                                yield [
+                                                    VM.giveback,
+                                                    eval(arg1)
+                                                ];
                                             yield [
                                                 VM.giveback,
                                                 x
@@ -158,7 +233,12 @@ function foo(x) {
     yield [
         VM.return,
         (yield [
-            function () {
+            function (arg1) {
+                if (arg1)
+                    yield [
+                        VM.giveback,
+                        eval(arg1)
+                    ];
                 yield [
                     VM.giveback,
                     0
